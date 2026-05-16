@@ -7,6 +7,24 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import axios from "axios";
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const statusCode = error?.response?.status;
+
+    if (statusCode === 401) {
+      window.alert("401 Unauthorized. Please sign in again.");
+    }
+
+    if (statusCode === 403) {
+      window.alert("403 Forbidden. You do not have access to this action.");
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
